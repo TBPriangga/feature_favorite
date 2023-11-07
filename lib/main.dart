@@ -1,3 +1,6 @@
+// ignore_for_file: unnecessary_import
+
+import 'package:tutorial_fitur_favorite/core.dart';
 import 'package:flutter/material.dart';
 import 'module/main_navigation/view/main_navigation_view.dart';
 import 'module/service/db_service/db_service.dart';

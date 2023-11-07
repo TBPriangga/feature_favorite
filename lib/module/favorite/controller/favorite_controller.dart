@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_import
+
 import 'package:flutter/material.dart';
 import 'package:tutorial_fitur_favorite/core.dart';
 import 'package:tutorial_fitur_favorite/module/service/product_service/product_service.dart';
@@ -34,6 +36,7 @@ class FavoriteController extends State<FavoriteView> {
   removeFromFavorite(Map item) async {
     await ProductService().removeFromFavortie(item);
     await FavoriteController.instance.getFavoriteProducts();
+    await DashboardController.instance.getProducts();
     setState(() {});
   }
 }

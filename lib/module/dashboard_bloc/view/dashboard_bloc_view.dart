@@ -1,23 +1,62 @@
 // ignore_for_file: unnecessary_import, avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tutorial_fitur_favorite/core.dart';
-import 'package:tutorial_fitur_favorite/module/service/product_service/product_service.dart';
-import '../controller/dashboard_controller.dart';
+import '../../service/product_service/product_service.dart';
+import '../bloc/dashboard_bloc_bloc.dart';
+import '../state/dashboard_bloc_state.dart';
 
-class DashboardView extends StatefulWidget {
-  const DashboardView({Key? key}) : super(key: key);
+class DashboardBlocView extends StatefulWidget {
+  const DashboardBlocView({Key? key}) : super(key: key);
 
-  Widget build(context, DashboardController controller) {
-    controller.view = this;
+  @override
+  State<DashboardBlocView> createState() => _DashboardBlocViewState();
+}
 
+class _DashboardBlocViewState extends State<DashboardBlocView> {
+  DashboardBlocBloc bloc = DashboardBlocBloc();
+
+  @override
+  void initState() {
+    bloc.initState();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (BuildContext context) => bloc,
+      child: BlocListener<DashboardBlocBloc, DashboardBlocState>(
+        listener: (context, state) {},
+        child: BlocBuilder<DashboardBlocBloc, DashboardBlocState>(
+          builder: (context, state) {
+            final bloc = context.read<DashboardBlocBloc>();
+            return buildView(context, bloc, state);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget buildView(
+    BuildContext context,
+    DashboardBlocBloc bloc,
+    DashboardBlocState state,
+  ) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Dashboard"),
         actions: [
           IconButton(
-              onPressed: () => controller.generateProducts(),
+              onPressed: () => bloc.add(DashboardBlocGenereateProductEvent()),
               icon: const Icon(
                 Icons.refresh,
                 size: 24.0,
@@ -100,11 +139,11 @@ class DashboardView extends StatefulWidget {
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
                 ),
-                itemCount: controller.products.length,
+                itemCount: state.products.length,
                 shrinkWrap: true,
                 physics: const ScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
-                  var item = controller.products[index];
+                  var item = state.products[index];
                   bool isFavorite = ProductService().isFavorite(item);
 
                   return Container(
@@ -138,8 +177,11 @@ class DashboardView extends StatefulWidget {
                                     backgroundColor: Colors.white,
                                     child: InkWell(
                                       onTap: () => isFavorite
-                                          ? controller.removeFromFavorite(item)
-                                          : controller.addToFavorite(item),
+                                          ? bloc.add(
+                                              DashboardBlocRemoveFromFavorite(
+                                                  item: item))
+                                          : bloc.add(DashboardBlocAddToFavorite(
+                                              item: item)),
                                       child: Icon(
                                         Icons.favorite,
                                         color: isFavorite
@@ -186,7 +228,4 @@ class DashboardView extends StatefulWidget {
       ),
     );
   }
-
-  @override
-  State<DashboardView> createState() => DashboardController();
 }

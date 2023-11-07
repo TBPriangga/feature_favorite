@@ -1,9 +1,11 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:flutter/material.dart';
 import 'package:tutorial_fitur_favorite/core.dart';
 import '../controller/favorite_controller.dart';
 
 class FavoriteView extends StatefulWidget {
-  FavoriteView({Key? key}) : super(key: key);
+  const FavoriteView({Key? key}) : super(key: key);
 
   Widget build(context, FavoriteController controller) {
     controller.view = this;

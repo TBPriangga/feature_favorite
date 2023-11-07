@@ -1,10 +1,6 @@
 {
     "modules": [
-        "main_navigation",
-        "dashboard",
-        "order",
-        "favorite",
-        "profile"
+        "dashboard_bloc"
     ],
     "module_directory_name": "module",
     "experimental_mode": false,
